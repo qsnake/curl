@@ -1,0 +1,24 @@
+# /bin/sh
+
+if [ "$SPKG_LOCAL" = "" ]; then
+   echo "SPKG_LOCAL undefined ... exiting";
+   echo "Maybe run 'qsnake --shell'?"
+   exit 1
+fi
+
+set -e
+
+# This is absolutely crucial. Qsnake has $RM="rm", and if that is so, then the
+# configure script below keeps it as RM="rm" and the make fails later on. In
+# Ubuntu, $RM is not defined, then the configure script below sets RM="rm -f"
+# and the make succeeds. So to fix this, we need to unset RM, and then all is
+# fine.
+unset RM
+
+# On Fedora 14, the "rt" library is not linked properly, so we need to help it:
+export LDFLAGS="-lrt"
+
+cd src/
+./configure --prefix=$SPKG_LOCAL --with-gnutls
+make
+make install
