@@ -18,7 +18,10 @@ unset RM
 # On Fedora 14, the "rt" library is not linked properly, so we need to help it:
 export LDFLAGS="-lrt"
 
-./buildconf
+# The configure script is already committed in the repository. But it is
+# generated using:
+#./buildconf
+
 ./configure --prefix=$SPKG_LOCAL --with-gnutls
 make
 make install
